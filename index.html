@@ -14,11 +14,16 @@
     <main>
 
 <div class="heading-section">
-    <h1>Get your task done.....</h1>
+    <h1>Mir Hanans ToDo List.....</h1>
 </div>
 <div class="task-section">
     <input type="text" name="" id="task-textbox" placeholder="Enter your task here">
-    <button id="Enter">Got This!</button>
+    <button id="Enter">Add Task</button>
+    <select name="state" id="state">
+        <option value="all">All</option>
+        <option value="completed">Completed</option>
+        <option value="incomplete">Incomplete</option>
+    </select>
 </div>
 <div class="data-time-section">
     <!-- <pre>
@@ -29,13 +34,7 @@
 
 
 <div class="todo-list">
-<ul class="entered-task">
-    <!-- <li class="todoStyle"><p>Your Entered task is here</p>
-<button class="btn done"><img src="assets/done-icon.svg" alt=""></button>
-<button class="btn"><img src="assets/deleteIcon.svg" alt=""></button>
-    
-</li> -->
-</ul>
+<ul class="list-items"></ul>
 
 </div>
 
