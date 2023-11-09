@@ -1,5 +1,6 @@
 'use strict'
 
+
 // const { filter } = require("core-js/core/array");
 
 // btnSetTask.addEventListener('click',function(){
@@ -13,10 +14,9 @@ let timeLabel=document.querySelector('#date-time');
 let enteredText=document.querySelector('#task-textbox');
 let taskView=document.querySelector('.list-items');
 let filterToDo=document.querySelector('#state');
-
-const todoList=[];
-let btnDone;
-let connectingVariable=1;
+///////////////////////////////////////////////////////
+//GET THE TODOS FROM THE LOCAL STORAGE
+document.addEventListener('DOMContentLoaded',toGetLocalToDos);
 ////////////////////////////////////
 //FUNCTION FOR SETTING THE DATE AND TIME
 let dateTime=function(){
@@ -33,7 +33,7 @@ let getTime=function(){
 }
 setInterval(getTime,1000);
 //////////////////////////////////////////////
-//FUNCTION TO GET THE TASK ENTERED
+//FUNCTION TO GET YOUR THE TASK ENTERED
 function getTask(e){
     e.preventDefault();
     let listText=enteredText.value;
@@ -47,6 +47,7 @@ function getTask(e){
     newListItem.classList.add('todoStyle');
     newListItem.innerHTML=`<p>${listText}</p>`;
     todoDiv.appendChild(newListItem);
+    savaDataToLocalStorage(listText);
     const todoDoneButton=document.createElement('button');
     todoDoneButton.classList.add('btn');
     todoDoneButton.classList.add('done');
@@ -74,7 +75,8 @@ function markTaskComplete(e){
     if(clickedItem.parentElement.classList.contains('delete')){
         let listBtn=clickedItem.parentElement;
         let listItem=listBtn.parentElement;
-        listItem.classList.add('delete-task')
+        listItem.classList.add('delete-task');
+        deleteFromLocalStorage(listItem);
         listItem.addEventListener('transitionend',function(){
             listItem.remove();
         })
@@ -86,7 +88,6 @@ taskView.addEventListener('click',markTaskComplete);
 function filterToDOList(event){
     event.preventDefault();
 let toDos=taskView.childNodes;
-console.log(toDos);
 toDos.forEach((todo)=>{
 switch(event.target.value){
     case 'all':
@@ -113,3 +114,58 @@ switch(event.target.value){
 })
 }
 filterToDo.addEventListener('click',filterToDOList);
+////////////////////////////////////////////////
+//SAVE DATA TO LOCAL STORAGE
+function savaDataToLocalStorage(todos){
+let todo;
+if(localStorage.getItem('todos')===null){
+    todo=[];
+}else{
+    todo=JSON.parse(localStorage.getItem('todos'));
+}
+todo.push(todos);
+localStorage.setItem('todos',JSON.stringify(todo));
+}
+function toGetLocalToDos(){
+    let todo;
+if(localStorage.getItem('todos')===null){
+    todo=[];
+}else{
+    todo=JSON.parse(localStorage.getItem('todos'));
+}
+todo.forEach((todo)=>{
+    const todoDiv=document.createElement('div');
+    todoDiv.classList.add('todo');
+    const newListItem=document.createElement('li');
+    newListItem.classList.add('todoStyle');
+    newListItem.innerHTML=`<p>${todo}</p>`;
+    todoDiv.appendChild(newListItem);
+    const todoDoneButton=document.createElement('button');
+    todoDoneButton.classList.add('btn');
+    todoDoneButton.classList.add('done');
+    todoDoneButton.innerHTML='<img src="assets/done-icon.svg" alt="">';
+    todoDiv.appendChild(todoDoneButton);
+    const todoDeleteButton=document.createElement('button');
+    todoDeleteButton.classList.add('btn');
+    todoDeleteButton.classList.add('delete');
+    todoDeleteButton.innerHTML='<img src="assets/deleteIcon.svg" alt="">';
+    todoDiv.appendChild(todoDeleteButton);
+    taskView.appendChild(todoDiv);
+
+})
+}
+////////////////////////////////////////////////////////
+//DELETE DATA FROM LOCAL STORAGE
+function deleteFromLocalStorage(todos){
+    let todo;
+    if(localStorage.getItem('todos')===null){
+        todo=[];
+    }else{
+        todo=JSON.parse(localStorage.getItem('todos'));
+    }
+    const todoIndex=todos.children[0].innerText;
+    todo.splice(todo.indexOf(todoIndex),1);
+    localStorage.setItem('todos',JSON.stringify(todo));
+
+
+}
